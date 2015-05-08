@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>polymer-spline-graph demo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<script src="../webcomponentsjs/webcomponents.min.js"></script>
+	<link rel="import" href="polymer-spline-graph.html">
+</head>
+<body unresolved>
+	<polymer-element name="polymer-spline-graph-demo">
+		<template>
+			<polymer-spline-graph
+				chartTitle="Spline Chart Demo"
+				categories="{{ categories }}"
+				series="{{ series }}"
+				zoneLength="{{ zoneLength }}" ></polymer-spline-graph>
+		</template>
+		<script src="../lodash/lodash.js"></script>
+		<script>
+			function setFake() {
+				return [
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2))
+				];
+			}
+			Polymer({
+				publish: {
+					categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+					series: [
+						{
+							name: 'Line 1',
+							data: setFake()
+						}, {
+							name: 'Line 2',
+							data: setFake()
+						}
+					],
+					zoneLength: 8,
+				},
+				ready: function() {
+					var poly = this;
+					setTimeout(function() {
+						poly.zoneLength = 5;
+						setInterval(function() {
+							poly.series = [
+								{
+									name: 'Line 1',
+									data: setFake()
+								}, {
+									name: 'Line 2',
+									data: setFake()
+								}
+							];
+						}, 3000);
+					}, 3000);
+				}
+			});
+		</script>
+	</polymer-element></polymer-element>
+	<polymer-spline-graph-demo></polymer-spline-graph-demo>
+</body>
+</html>

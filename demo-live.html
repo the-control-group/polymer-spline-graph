@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>polymer-live-spline-graph demo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<script src="../webcomponentsjs/webcomponents.min.js"></script>
+	<link rel="import" href="polymer-live-spline-graph.html">
+</head>
+<body unresolved>
+	<polymer-element name="polymer-live-spline-graph-demo">
+		<template>
+			<polymer-live-spline-graph
+				chartTitle="Spline Live Chart Demo"
+				categories="{{ categories }}"
+				series="{{ series }}"
+				zoneLength="{{ zoneLength }}"
+				timezoneOffset="8"
+				onLoad="{{ onLoad }}" ></polymer-live-spline-graph>
+		</template>
+		<script src="../lodash/lodash.js"></script>
+		<script>
+			Polymer({
+				publish: {
+					categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+					series: [{
+						name: 'Random data',
+						data: (function () {
+							// This is a demo. You want to make request here;
+							var data = [],
+							time = (new Date()).getTime(),
+							i;
+							for (i = -19; i <= 0; i += 1) {
+								data.push({
+									x: time + i * 1000,
+									y: Math.random()
+								});
+							}
+							return data;
+						}())
+					}],
+					onLoad: function() {
+						var series = this.series[0];
+						setInterval(function () {
+							// This is a demo. You want to make request here;
+							var x = (new Date()).getTime(), // current time
+								y = Math.random();
+							series.addPoint([x, y], true, true);
+						}, 1000);
+					},
+					zoneLength: 8,
+				},
+				ready: function() {
+				}
+			});
+		</script>
+	</polymer-element></polymer-element>
+	<polymer-live-spline-graph-demo></polymer-live-spline-graph-demo>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!--
+# polymer-live-spline-graph
+
+**This element is compatible with Polymer 0.5.**
+
+__Example:__
+
+```
+	<polymer-element name="polymer-spline-graph-demo">
+		<template>
+			<polymer-spline-graph
+				chartTitle="Spline Chart Demo"
+				categories="{{ categories }}"
+				series="{{ series }}"
+				zoneLength="{{ zoneLength }}" ></polymer-spline-graph>
+		</template>
+		<script src="../lodash/lodash.js"></script>
+		<script>
+			function setFake() {
+				return [
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2)),
+					Number((Math.random() * 10).toFixed(2))
+				];
+			}
+			Polymer({
+				publish: {
+					categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+					series: [
+						{
+							name: 'Line 1',
+							data: setFake()
+						}, {
+							name: 'Line 2',
+							data: setFake()
+						}
+					],
+					zoneLength: 8,
+				},
+				ready: function() {
+					var poly = this;
+					setTimeout(function() {
+						poly.zoneLength = 5;
+						setInterval(function() {
+							poly.series = [
+								{
+									name: 'Line 1',
+									data: setFake()
+								}, {
+									name: 'Line 2',
+									data: setFake()
+								}
+							];
+						}, 3000);
+					}, 3000);
+				}
+			});
+		</script>
+	</polymer-element></polymer-element>
+	<polymer-spline-graph-demo></polymer-spline-graph-demo>
+```
+
+# General Attributes
+
+### `series`
+
+Array of objects containing name and data points.
+```
+[
+	{
+		name: 'Line 1',
+		data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+	}, {
+		name: 'Line 2',
+		data: [54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6]
+	}
+]
+```
+
+### `chartTitle`
+
+Title displayed above graph. Default `null`
+
+### `yAxisTitle`
+
+Title displayed left of graph. Default `null`
+
+### `width`
+
+Container width. Default `400`
+
+### `height`
+
+Container width. Default `400`
+
+### `options`
+
+Object to extend highcarts
+
+### `onLoad`
+
+Function getting adding new data to the series.
+
+### `timezoneOffset`
+
+Timezone offset. Example PST is `8`
+
+### `xAxislInterval`
+
+The approximate pixel interval of the tick marks.
+
+-->
+
+<polymer-element name="polymer-live-spline-graph" extends="x-spline-graph" attributes="xAxislInterval onLoad timezoneOffset">
+	<link rel="import" href="./x-spline-graph.html">
+	<template>
+		<shadow></shadow>
+	</template>
+	<script>
+		Polymer({
+			publish: {
+				xAxislInterval: 150,
+				timezoneOffset: 0,
+				onLoad: null,
+			},
+			ready: function() {
+				var poly = this;
+				poly.async(function() {
+					Highcharts.setOptions({
+						global: {
+							timezoneOffset: Number(poly.timezoneOffset) * 60
+						}
+					});
+				});
+				poly.super();
+			},
+			getSettings: function() {
+				var poly = this;
+				var settings = {
+					chart: {
+						type: 'spline',
+						renderTo: poly.$.container,
+						events: {
+							load: function() {
+								if( _.isFunction( poly.onLoad ) ) {
+									poly.onLoad.call(this);
+								}
+							}
+						},
+					},
+					xAxis: {
+						type: 'datetime',
+						tickPixelInterval: poly.xAxislInterval
+					},
+					series: poly.series,
+				};
+				return settings;
+			}
+		});
+	</script>
+</polymer-element>

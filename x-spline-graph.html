@@ -1,0 +1,60 @@
+<link rel="import" href="../polymer/polymer.html">
+<polymer-element name="x-spline-graph" attributes="series chartTitle yAxisTitle width height options">
+	<template>
+		<link rel="stylesheet" type="text/css" href="./x-spline-graph.css">
+		<div id="container" style="width: {{width}};height: {{height}};"></div>
+	</template>
+	<script src="../highcharts/adapters/standalone-framework.js"></script>
+	<script src="../highcharts/highcharts.js"></script>
+	<script src="../lodash/lodash.js"></script>
+	<script>
+		Polymer({
+			publish: {
+				width: 400,
+				height: 400,
+				chart: null,
+				chartTitle: null,
+				yAxisTitle: null,
+				series: [],
+				options: {},
+			},
+			ready: function(event,detail,sender) {
+				var poly = this;
+				poly.async(poly.drawChart);
+			},
+			optionsChanged: function(oldValue,newValue) {
+				var poly = this;
+				if( _.size(newValue) && poly.chart ) {
+					poly.drawChart();
+				}
+			},
+			drawChart: function() {
+				var poly = this;
+				var settings = {
+					credits: {
+						enabled: false
+					}
+				};
+				if( poly.chartTitle ) {
+					settings.title = {
+						text: poly.chartTitle
+					};
+				}
+				if( poly.yAxisTitle ) {
+					settings.yAxis = {
+						title: {
+							text: poly.yAxisTitle
+						}
+					};
+				} else {
+					settings.yAxis = {
+						title: {
+							text: null
+						}
+					};
+				}
+				poly.chart = new Highcharts.Chart(_.extend(settings, poly.getSettings(), poly.options));
+			}
+		});
+	</script>
+</polymer-element>

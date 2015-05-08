@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>polymer-live-spline-graph tests</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<script src="../../webcomponentsjs/webcomponents.js"></script>
+	<script src="../../web-component-tester/browser.js"></script>
+	<script src="../../jquery/dist/jquery.min.js"></script>
+	<script src="../../lodash/lodash.js"></script>
+	<link rel="import" href="../polymer-live-spline-graph.html">
+</head>
+<body unresolved>
+	<polymer-live-spline-graph
+		chartTitle="Spline Chart Test"
+		yAxisTitle="Y Axis Title"
+		categories="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']"
+		series='[
+			{
+				"name": "Line 1",
+				"data": [ 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4 ]
+			}
+		]'
+		zoneLength="8" ></polymer-live-spline-graph>
+	<script>
+		window.addEventListener('polymer-ready', function(e) {
+			var el = document.querySelector('polymer-live-spline-graph');
+			var container = el.$.container;
+			var title = $( container.querySelector('.highcharts-title tspan') ).html();
+			var yAxistitle = $( container.querySelector('.highcharts-yaxis-title tspan') ).html();
+
+			suite('<polymer-live-spline-graph>', function () {
+				test('initializes', function () {
+					assert(el._readied);
+				});
+				test('has Title binding', function () {
+					assert.equal( title, 'Spline Chart Test');
+				});
+				test('has Y Axis Title binding', function () {
+					assert.equal( yAxistitle, 'Y Axis Title');
+				});
+			});
+		});
+	</script>
+</body>
+</html>
